@@ -148,49 +148,73 @@ class Car(Automobile):
         )
 
         
+       # ============================
+        # Flower Line Parameters
         # ============================
-        # Flower Parameters
-        # ============================
-        flower_center_radius = 0.05
-        flower_center_thickness = 0.05
-        flower_center_color = color.green
+        num_flowers = 6
+        spacing = 1.5  # Space between each flower
+        start_x = -((num_flowers - 1) * spacing) / 2  # Center the line
 
-        flower_petal_color = color.red
-        flower_petal_length = 0.15
-        flower_petal_width = 0.1
+        for j in range(num_flowers):
+            flower_x = start_x + j * spacing
+            flower_z = lower_body_width * 1.5  # A little in front of the car (adjust as needed)
+            flower_y = 0
 
-        num_petals = 5
+            # ============================
+            # Flower Parameters
+            # ============================
+            flower_center_radius = 0.05
+            flower_center_thickness = 0.05
+            flower_center_color = color.green
 
-        
+            flower_petal_color = color.red
+            flower_petal_length = 0.15
+            flower_petal_width = 0.1
 
-        # ============================
-        # Flower Center
-        # ============================
-        flower_center_pos = vector(0, 0, lower_body_width * 2)
-        flower_center = cylinder(
-            pos=flower_center_pos,
-            axis=vector(0, 0, flower_center_thickness),
-            radius=flower_center_radius,
-            color=flower_center_color
-        )
+            num_petals = 5
 
-        # ============================
-        # Flower Petals
-        # ============================
-        for i in range(num_petals):
-            angle = (2 * pi / num_petals) * i
-            x = cos(angle) * flower_petal_length
-            y = sin(angle) * flower_petal_length
-            offset = vector(x, y, 0)  
-            
-            petal = ellipsoid(
-                pos=flower_center_pos + vector(0, flower_center_thickness / 2, 0) + offset,
-                length=flower_petal_length,
-                height=flower_petal_width,
-                width=flower_center_thickness,
-                color=flower_petal_color,
-                axis=offset
+            # ============================
+            # Flower Center
+            # ============================
+            flower_center_pos = vector(flower_x, flower_y, flower_z)
+            flower_center = cylinder(
+                pos=flower_center_pos,
+                axis=vector(0, 0, flower_center_thickness),
+                radius=flower_center_radius,
+                color=flower_center_color
             )
+
+            # ============================
+            # Flower Petals
+            # ============================
+            for i in range(num_petals):
+                petal_angle = (2 * pi / num_petals) * i
+                x = cos(petal_angle) * flower_petal_length
+                y = sin(petal_angle) * flower_petal_length
+                offset = vector(x, y, 0)
+
+                petal = ellipsoid(
+                    pos=flower_center_pos + vector(0, flower_center_thickness / 4, 0) + offset,
+                    length=flower_petal_length,
+                    height=flower_petal_width,
+                    width=flower_center_thickness,
+                    color=flower_petal_color,
+                    axis=offset
+                )
+
+            # ============================
+            # Flower Stem
+            # ============================
+            stem_length = 0.5
+            stem_radius = 0.01
+            stem_color = color.green
+            stem = cylinder(
+                pos=flower_center_pos,
+                axis=vector(0, -stem_length, 0),
+                radius=stem_radius,
+                color=stem_color
+            )
+
 
         # ============================
         # Label
