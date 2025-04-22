@@ -1,37 +1,41 @@
 from vpython import *
 from .vehicles import Automobile # Adjusted for typical script usage
+import random
 
 class SUV(Automobile):
     def __init__(self, make, model, mileage, price, doors):
         super().__init__(make, model, mileage, price)
         self.doors = doors
 
-    def display_3d(self, pos=vector(0, 0, 0), color_val=color.red, render_list=None):
-        if render_list is None:
-            render_list = []
+    def display_3d(self, pos=vector(0, 0, 0)):
+    
+        render_list = []
 
+        color_val = vector(random.random(), random.random(), random.random())
+        # Set the background color and title
         scene.background = color.white
         scene.title = f"{self.make} {self.model}"
 
-        # Dimensions
-        wheel_radius = 0.5
-        wheel_length = 0.12
-        lower_body_length = 6
-        lower_body_width = 2.5
-        lower_body_height = 2
-        upper_body_length = 4
-        upper_body_width = 2.5
-        upper_body_height = 1.5
+      # Dimensions
+        wheel_radius = random.uniform(0.4, 0.6)
+        wheel_length = random.uniform(0.1, 0.15)
+
+        lower_body_length = random.uniform(6, 7)
+        car_width = random.uniform(2.2, 3)
+        lower_body_height = random.uniform(1.8, 2.5)
+
+        upper_body_length = random.uniform(4.5, 5)
+        upper_body_height = random.uniform(1.2, 2)
 
         # Lower body
         lower_body = box(pos=pos + vector(0, lower_body_height / 2, 0),
-                         size=vector(lower_body_length, lower_body_height, lower_body_width),
+                         size=vector(lower_body_length, lower_body_height, car_width),
                          color=color_val)
         render_list.append(lower_body)
 
         # Upper body
-        upper_body = box(pos=pos + vector(0, lower_body_height + upper_body_height / 2, 0),
-                         size=vector(upper_body_length, upper_body_height, upper_body_width),
+        upper_body = box(pos=pos + vector(-(lower_body_length/2)+(upper_body_length/2), lower_body_height + upper_body_height / 2, 0),
+                         size=vector(upper_body_length, upper_body_height, car_width),
                          color=color_val)
         render_list.append(upper_body)
 
@@ -43,15 +47,15 @@ class SUV(Automobile):
         window_height = upper_body_height * 0.9
 
         wind_screen = box(pos=upper_body.pos + vector(upper_body_length / 2 + window_thickness, 0, 0),
-                          size=vector(window_thickness, window_height, upper_body_width * 0.9),
+                          size=vector(window_thickness, window_height, car_width * 0.9),
                           color=window_color, opacity=opacity)
         render_list.append(wind_screen)
 
         for side in [1, -1]:
-            side_window1 = box(pos=upper_body.pos + vector(upper_body_length / 4, 0, side * (upper_body_width / 2 + window_thickness)),
+            side_window1 = box(pos=upper_body.pos + vector(upper_body_length / 4, 0, side * (car_width / 2 + window_thickness)),
                                size=vector(window_length, window_height, window_thickness),
                                color=window_color, opacity=opacity)
-            side_window2 = box(pos=upper_body.pos + vector(-upper_body_length / 4, 0, side * (upper_body_width / 2 + window_thickness)),
+            side_window2 = box(pos=upper_body.pos + vector(-upper_body_length / 4, 0, side * (car_width / 2 + window_thickness)),
                                size=vector(window_length, window_height, window_thickness),
                                color=window_color, opacity=opacity)
             render_list.extend([side_window1, side_window2])
@@ -64,10 +68,10 @@ class SUV(Automobile):
         door_height = lower_body_height * 0.9
 
         for side in [1, -1]:
-            door1 = box(pos=lower_body.pos + vector(upper_body_length / 4, 0.1, side * (lower_body_width / 2 + door_thickness)),
+            door1 = box(pos=lower_body.pos + vector(upper_body.pos.x + (upper_body_length / 4), 0.1, side * (car_width / 2 + door_thickness)),
                         size=vector(door_length, door_height, door_thickness),
                         color=door_color, opacity=door_opacity)
-            door2 = box(pos=lower_body.pos + vector(-upper_body_length / 4, 0.1, side * (lower_body_width / 2 + door_thickness)),
+            door2 = box(pos=lower_body.pos + vector(upper_body.pos.x - (upper_body_length / 4), 0.1, side * (car_width / 2 + door_thickness)),
                         size=vector(door_length, door_height, door_thickness),
                         color=door_color, opacity=door_opacity)
             render_list.extend([door1, door2])
@@ -76,7 +80,7 @@ class SUV(Automobile):
         headlight_radius = 0.12
         headlight_y = pos.y + lower_body_height * 0.6
         headlight_x = pos.x + lower_body_length / 2 + headlight_radius * 0.5
-        headlight_z_offset = lower_body_width / 3
+        headlight_z_offset = car_width / 3
 
         for side in [1, -1]:
             headlight = sphere(pos=vector(headlight_x, headlight_y, pos.z + side * headlight_z_offset),
@@ -87,10 +91,10 @@ class SUV(Automobile):
 
         # Wheels
         wheel_positions = [
-            vector(-lower_body_length / 2 + wheel_radius * 2, 0, lower_body_width / 2),
-            vector(-lower_body_length / 2 + wheel_radius * 1.5, 0, -lower_body_width / 2 - wheel_length),
-            vector(lower_body_length / 2 - wheel_radius * 1.5, 0, lower_body_width / 2),
-            vector(lower_body_length / 2 - wheel_radius * 1.5, 0, -lower_body_width / 2 - wheel_length)
+            vector(-lower_body_length / 2 + wheel_radius * 2, 0, car_width / 2),
+            vector(-lower_body_length / 2 + wheel_radius * 1.5, 0, -car_width / 2 - wheel_length),
+            vector(lower_body_length / 2 - wheel_radius * 1.5, 0, car_width / 2),
+            vector(lower_body_length / 2 - wheel_radius * 1.5, 0, -car_width / 2 - wheel_length)
         ]
 
         for wp in wheel_positions:
@@ -105,14 +109,14 @@ class SUV(Automobile):
 
         for j in range(num_flowers):
             flower_x = start_x + j * spacing
-            flower_z = lower_body_width * 1.5
+            flower_z = car_width * 1.5
             flower_y = 0
 
             flower_center = cylinder(
                 pos=vector(flower_x, flower_y, flower_z),
                 axis=vector(0, 0, 0.05),
                 radius=0.06,
-                color=color.green
+                color=vector(random.random(), random.random(), random.random())
             )
             render_list.append(flower_center)
 
@@ -124,7 +128,7 @@ class SUV(Automobile):
                     length=0.15,
                     height=0.1,
                     width=0.05,
-                    color=color.red,
+                    color=vector(random.random(), random.random(), random.random()),
                     axis=offset
                 )
                 render_list.append(petal)
