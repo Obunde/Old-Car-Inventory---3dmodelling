@@ -7,11 +7,23 @@ class Truck(Automobile):
         super().__init__(make, model, mileage, price)
         self.load_capacity = load_capacity
 
+    def display_color(self):
+        return f"RGB({self.color_val.x:.2f}, {self.color_val.y:.2f}, {self.color_val.z:.2f})" if hasattr(self, 'color_val') else "N/A"
+    
+    def display_info(self):
+        color_rgb = self.display_color()
+        return f"<b>Car Make:</b> {self.make}<br>" \
+           f"<b>Model:</b> {self.model}<br>" \
+           f"<b>Mileage:</b> {self.mileage} km<br>" \
+           f"<b>Price:</b> Ksh {self.price}<br>" \
+           f"<b>Load Capacity:</b> {self.load_capacity}<br>"\
+           f"<b>Color:</b> {color_rgb}<br>"
+
     def display_3d(self, pos=vector(0, 0, 0)):
         scene.background = color.white
         scene.title = f"{self.make} {self.model}"
 
-        color_val = vector(random.random(), random.random(), random.random())
+        self.color_val = vector(random.random(), random.random(), random.random())
         render_list = []
 
         # Dimensions
@@ -28,13 +40,13 @@ class Truck(Automobile):
         # Cabin (Front)
         cabin = box(pos=pos + vector(-cargo_length/2 + cabin_length/2, cabin_height/2, 0),
                     size=vector(cabin_length, cabin_height, truck_width),
-                    color=color_val)
+                    color=self.color_val)
         render_list.append(cabin)
 
         # Cargo bed (Rear)
         cargo = box(pos=pos + vector(cargo_length/2 - cargo_length/2, cargo_height/2, 0),
                     size=vector(cargo_length, cargo_height, truck_width),
-                    color=color_val)
+                    color=self.color_val)
         render_list.append(cargo)
 
         # Cabin windows
@@ -135,7 +147,7 @@ class Truck(Automobile):
         # Label
         truck_label = label(pos=pos + vector(0, cabin_height + 0.5, 0),
                             text=f"{self.make} {self.model}\nLoad: {self.load_capacity}kg\nKsh {self.price}",
-                            height=12, box=False, color=color_val)
+                            height=12, box=False, color=self.color_val)
         render_list.append(truck_label)
 
         return render_list

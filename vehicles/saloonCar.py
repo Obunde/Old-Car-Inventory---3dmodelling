@@ -6,6 +6,18 @@ class Car(Automobile):
     def __init__(self, make, model, mileage, price, doors):
         super().__init__(make, model, mileage, price)
         self.doors = doors
+    
+    def display_color(self):
+        return f"RGB({self.color_val.x:.2f}, {self.color_val.y:.2f}, {self.color_val.z:.2f})" if hasattr(self, 'color_val') else "N/A"
+    
+    def display_info(self):
+        color_rgb = self.display_color()
+        return f"<b>Car Make:</b> {self.make}<br>" \
+           f"<b>Model:</b> {self.model}<br>" \
+           f"<b>Mileage:</b> {self.mileage} km<br>" \
+           f"<b>Price:</b> Ksh {self.price}<br>" \
+           f"<b>Doors:</b> {self.doors}<br>"\
+           f"<b>Color:</b> {color_rgb}<br>"
 
     def display_3d(self, pos=vector(0, 0, 0)):
         scene.background = color.white
@@ -13,7 +25,8 @@ class Car(Automobile):
 
         render_list = []  # List to hold current 3D objects for clearing
 
-        color_val = vector(random.random(), random.random(), random.random())
+        self.color_val = vector(random.random(), random.random(), random.random())
+        
         # Dimensions
         wheel_radius = random.uniform(0.3, 0.5)
         wheel_length = random.uniform(0.08, 0.12)
@@ -28,13 +41,13 @@ class Car(Automobile):
         # Lower body of the car
         lower_body = box(pos=pos + vector(0, lower_body_height / 2, 0),
                          size=vector(lower_body_length, lower_body_height, car_width),
-                         color=color_val)
+                         color=self.color_val)
         render_list.append(lower_body)
 
         # Upper body of the car
         upper_body = box(pos=pos + vector(0, lower_body_height + upper_body_height / 2, 0),
                          size=vector(upper_body_length, upper_body_height, car_width),
-                         color=color_val)
+                         color=self.color_val)
         render_list.append(upper_body)
 
         # Windows (Front and Side)
@@ -168,6 +181,6 @@ class Car(Automobile):
         # Label
         render_list.append(label(pos=pos + vector(0, lower_body_height + upper_body_height + 0.5, 0),
                                  text=f"{self.make} {self.model}\nKsh {self.price}",
-                                 height=12, box=False, color=color_val))
+                                 height=12, box=False, color=self.color_val))
 
         return render_list

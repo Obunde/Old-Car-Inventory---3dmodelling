@@ -2,6 +2,7 @@ from vehicles.saloonCar import Car
 from vehicles.truck import Truck
 from vehicles.suv import SUV
 from vpython import button, scene
+from vpython import *
 
 # Create objects
 car = Car('BMW', 2001, 70000, 15000.0, 4)
@@ -22,14 +23,19 @@ def clear_scene():
 def show_car():
     clear_scene()
     current_objects.extend(car.display_3d())
+    info_display.text = car.display_info() 
 
 def show_truck():
     clear_scene()
     current_objects.extend(truck.display_3d())
+    info_display.text = truck.display_info() 
 
 def show_suv():
     clear_scene()
     current_objects.extend(suv.display_3d())
+    info_display.text = suv.display_info() 
+
+info_display = wtext(text="")
 
 # UI Buttons
 button(text="Show Car", bind=lambda _: show_car())
